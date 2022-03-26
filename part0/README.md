@@ -1,6 +1,5 @@
-# Part 0
+## Part 0: Fundamentals of Web apps
 
-Part 0 covers the Fundamentals of Web apps.
 
 The author presents a simple application, where the user can insert text into an input field and that value is displayed in a list once submited, on the same page. This application is used to discuss the differences between the old web development techniques (completely server-side generated pages with reloads on every request) and new web development (application logic in the browser, component rendering).
 
