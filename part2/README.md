@@ -10,7 +10,7 @@ We can map an array to generate HTML tags. Each child in an array should have an
 
 #### Importing modules
 
-Contents of JS modules are automatically in strict mode. Strict mode is a change introduced in ES5: it is more rigorous to errors (meaning that previous silencing mistakes are considered errors) and better optimizable. The list of changes is in the []mozilla dev docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode).
+Contents of JS modules are automatically in strict mode. Strict mode is a change introduced in ES5: it is more rigorous to errors (meaning that previous silencing mistakes are considered errors) and better optimizable. The list of changes is in the [mozilla dev docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode).
 
 Different types of imports:
 
