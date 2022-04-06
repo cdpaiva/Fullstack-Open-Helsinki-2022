@@ -46,7 +46,7 @@ Then, we are presented to stateful components. Components can have special funct
 > `useState` is a Hook that lets you add React state to function components.
 `useState` receives the initial state as an argument and returns a pair of values: the current state and a function that updates the state.
 
-Next topic is event handling. To handle events, we can set the value of _onClick_ attribute to be a reference to a function. This function is defined inside our component and will be executed once that event is triggered. This is the same behavior we see and Vue, there is a difference is syntax, since in JSX we pass a function, rather than a string in the `<template>` of a Vue component.
+Next topic is event handling. To handle events, we can set the value of a listener, for example _onClick_ attribute to be a reference to a function. This function is defined inside our component and will be executed once that event is triggered. React will provide a synthetic event This is the same behavior we see and Vue, there is a difference is syntax, since in JSX we pass a function, rather than a string in the `<template>` of a Vue component.
 It is important to understand that event handlers are functions, not function calls. If they were function calls that modified the state, each call would re-render the application and result in an infinite loop / overflow.
 The state is passed to child components as custom attributes inside the component's tag. Again, just like Vue.
 
