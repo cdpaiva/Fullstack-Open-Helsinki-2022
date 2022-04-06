@@ -1,9 +1,9 @@
-import axios from 'axios'
 import { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import ContactList from './components/ContactList'
 import FilteredList from './components/FilteredList'
+import service from './services/notes'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -12,25 +12,35 @@ const App = () => {
   const [query, setQuery] = useState('')
 
   useEffect(() => {
-    axios.get('http://localhost:3001/persons')
+    service
+      .getAll()
       .then(res => {
-        setPersons(res.data)
-      }
-      )
+        setPersons(res)
+      })
   }, [])
 
   const addName = (event) => {
     event.preventDefault()
-    if (persons.find(p => p.name === newName)) {
-      window.alert(`${newName} is already added to the phonebook`)
+    const person = persons.find(p => p.name === newName)
+    if (person) {
+      if(window.confirm(`${person.name} is already added to the phonebook. Replace the old number with a new one?`)){
+        const updatedPerson = {
+          ...person,
+          number: newNumber,
+        }
+        service
+          .update(updatedPerson.id, updatedPerson)        
+          .then(setPersons(persons.map(p => p.name!==newName ? p : updatedPerson)))
+      }
       return
     }
     const newPerson = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1
     }
-    setPersons(persons.concat(newPerson))
+    service
+      .create(newPerson)
+      .then(newPerson => setPersons(persons.concat(newPerson)))
   }
 
   const handleNameChange = (event) => {
@@ -45,6 +55,19 @@ const App = () => {
     setQuery(event.target.value)
   }
 
+  const handleDelete = (id) => {
+    const person = persons.find(p => p.id === id)
+    if(!person) {
+      return
+    }
+    if(window.confirm(`Do you really want to delete ${person.name}?`)){
+        service
+        .remove(id)
+        .then(setPersons(persons.filter(p => p.id !== id)))
+    }
+
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -54,11 +77,12 @@ const App = () => {
       />
 
       <h2>All contacts</h2>
-      <ContactList persons={persons} />
+      <ContactList persons={persons} handleDelete={handleDelete} />
       <h2>Filtered contacts</h2>
       <FilteredList
         persons={persons}
         query={query}
+        handleDelete={handleDelete}
       />
       <PersonForm
         newName={newName}

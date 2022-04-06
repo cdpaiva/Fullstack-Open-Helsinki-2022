@@ -1,4 +1,6 @@
-const FilteredList = ({ persons, query }) => {
+import Person from "./Person"
+
+const FilteredList = ({ persons, query, handleDelete }) => {
     if(!query) {
         return <p>Insert a name in the search box</p>
     }
@@ -6,7 +8,7 @@ const FilteredList = ({ persons, query }) => {
         .filter(p =>
             p.name.toLowerCase().includes(query.toLowerCase()))
         .map(p =>
-            (<p key={p.id}>{p.name}, {p.number}</p>)
+            <Person key={p.id} person={p} handleDelete={handleDelete}/>
         )
     }
 export default FilteredList
