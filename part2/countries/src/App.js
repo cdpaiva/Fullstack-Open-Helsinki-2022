@@ -1,33 +1,43 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react'
+import SearchResult from './components/SearchResults'
+import CountryInfo from './components/CountryInfo'
 
 function App() {
   const URL = 'https://restcountries.com/v3.1/all'
 
   const [countries, setCountries] = useState([])
   const [query, setQuery] = useState('')
+  const [selectedCountry, setSelectedCountry] = useState(undefined)
 
-  useEffect(() => {
+  const hook = () => {
     axios
       .get(URL)
-      .then(res => setCountries(res.data))
-  })
-
-  const handleChange = (e) => {
-    console.log('Called handleChange')
-    setQuery(e.target.value) 
+      .then(res => {
+        setCountries(res.data)
+      })
   }
 
-  const filteredCountries = countries.filter(c => c.name.common.includes(query))
-  
+  //Initial GET to fetch the countries list
+  useEffect(hook, [])
+
+  const handleChange = (e) => {
+    setQuery(e.target.value)
+  }
+
+  const handleShow = (country) => {
+    setSelectedCountry(country)
+  }
+
   return (
     <div>
-      <h1>Fetch all countries from the {URL}</h1>
-      <label htmlFor='searchCountry'></label>
-      <input id='searchCountry' type='text' value={query} onChange={handleChange}/>
-      <ul>
-        <li>'Number of results: ',{filteredCountries.length})</li>
-      </ul>
+      <h2>Countries Info</h2>
+      <label htmlFor='searchCountry'>Search a country</label>
+      <input id='searchCountry' type='text' value={query} onChange={handleChange} />
+
+      <SearchResult countries={countries} query={query} handleShow={handleShow} />
+      <CountryInfo country={selectedCountry} />
+
     </div>
   );
 }
