@@ -3,6 +3,7 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import ContactList from './components/ContactList'
 import FilteredList from './components/FilteredList'
+import Notification from './components/Notification'
 import service from './services/notes'
 
 const App = () => {
@@ -10,6 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [query, setQuery] = useState('')
+  const [message, setMessage] = useState('')
 
   useEffect(() => {
     service
@@ -31,6 +33,7 @@ const App = () => {
         service
           .update(updatedPerson.id, updatedPerson)        
           .then(setPersons(persons.map(p => p.name!==newName ? p : updatedPerson)))
+          .catch(setPersons(persons.filter(p => p.id !== updatedPerson.id)))
       }
       return
     }
@@ -41,6 +44,9 @@ const App = () => {
     service
       .create(newPerson)
       .then(newPerson => setPersons(persons.concat(newPerson)))
+      .then(setMessage('Contact added succesfully'))
+    
+    setTimeout(() => setMessage(''),3000)
   }
 
   const handleNameChange = (event) => {
@@ -65,12 +71,12 @@ const App = () => {
         .remove(id)
         .then(setPersons(persons.filter(p => p.id !== id)))
     }
-
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message}/>
       <Filter
         query={query}
         handleQueryChange={handleQueryChange}
