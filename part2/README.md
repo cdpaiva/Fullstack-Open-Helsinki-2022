@@ -86,7 +86,20 @@ As with _fetch_, axios returns a promise.
 
 > A Promise is an object representing the eventual completion or failure of an asynchronous operation.
 
+From You don't know JS, ch.3:
+
+> Promises are starting to take the JS world by storm, as developers and specification writers alike desperately seek to untangle the insanity of callback hell in their code/design.
+
 A promise will have 3 states: pending (haven't received the final value), fulfilled/resolved (final value received with success) and rejected (operation failed). To access the result of a resolved promise, we use the method `.then()`. This method is provided with a response object, that has valuable information, such as the data, headers and status code. Axios parses the data from text to JSON automatically for us.
 
 Effect hooks are used in function components to perform side effects, the most common side effect may be to fetch data. By default, the effect is always run after each render, but we  can change this easily. An empty array, for example, will make the effect run only in the first render.
+
+---
+
+### Altering data in the server
+
+This part continues to develop the previous example, now adding logic for PUT and DELETE requests. The code that communicates with the back-end is also extracted into its own file, which helps the separation of concerns in the code.
+
+For situations when a promise, or a promise chain, results in a rejected promise, we can have that reject treated by a second callback passed to `then()` or we can have a `catch()` in the end of the chain. Whichever promise that gets rejected will be caught by the _catch_ method.
+
 
