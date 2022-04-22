@@ -1,0 +1,16 @@
+### Get all blogs
+GET http://localhost:3001/api/blogs
+
+### Expected 404
+GET http://localhost:3001/api/erroringblogs
+
+### Post a valid blog
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+  "title": "React Blog",
+  "author": "Mark Young",
+  "url": "www.reactflexing.org",
+  "likes": 24
+}
