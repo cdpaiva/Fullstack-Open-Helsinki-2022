@@ -9,8 +9,51 @@ POST http://localhost:3001/api/blogs
 Content-Type: application/json
 
 {
-  "title": "React Blog",
+  "title": "React Blog 1",
   "author": "Mark Young",
   "url": "www.reactflexing.org",
   "likes": 24
+}
+
+### Post a valid user
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+  "username": "Terry Pratchett22",
+  "name": "Sir Terry",
+  "password": "rincewind123"
+}
+
+### Post an invalid user
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+  "username": "Terry Pratchett",
+  "password": "112341"
+}
+
+### Get all users
+GET http://localhost:3001/api/users
+
+### Login
+POST http://localhost:3001/api/login
+Content-Type: application/json
+
+{
+  "username": "Terry Pratchett22",
+  "password": "rincewind123"
+}
+
+### Create new blog
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRlcnJ5IFByYXRjaGV0dDIyIiwiaWQiOiI2MjY4MzVhYzdjN2Q2MjJiMWRmYmUyMWIiLCJpYXQiOjE2NTEwMDI2Mzd9.-SWJ_Q4dZR8ZUOd9cAoXVOw8636-6bKPMlFxe-sGfdc
+
+{
+  "title": "Discworld Novelll",
+  "author": "Mark Young",
+  "url": "www.reactflexing.org",
+  "likes": 55555
 }

@@ -2,6 +2,9 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../model/blog')
+const User = require('../model/user')
+const testHelper = require('./test_helper')
+const jwt = require('jsonwebtoken')
 
 const api = supertest(app)
 
@@ -19,15 +22,19 @@ test('test db loads all initial passed objects', async () => {
 })
 
 test('a valid blog can be added', async () => {
+    const user = testHelper.userTokens[0]
+
     const newBlog = {
         title: "Vue.js is great",
         author: "Evan Wu",
         url: "https://www.vuepower.com",
-        likes: 55
+        likes: 55,
+        user: user._id
     }
 
     await api
         .post('/api/blogs')
+        .set('Authorization', `bearer ${user.token}`)
         .send(newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/)
@@ -40,6 +47,8 @@ test('a valid blog can be added', async () => {
 })
 
 test('a blog with no title cannot be added', async () => {
+    const user = testHelper.userTokens[0]
+
     const newBlog = {
         author: "Evan Wu",
         url: "https://www.vuepower.com",
@@ -48,15 +57,18 @@ test('a blog with no title cannot be added', async () => {
 
     await api
         .post('/api/blogs')
+        .set('Authorization', `bearer ${user.token}`)
         .send(newBlog)
         .expect(400)
 
     const res = await api.get('/api/blogs')
-    
+
     expect(res.body).toHaveLength(initialBlogs.length)
 })
 
 test('a blog with no url cannot be added', async () => {
+    const user = testHelper.userTokens[0]
+
     const newBlog = {
         title: "New sourceless blog",
         author: "Evan Wu",
@@ -65,15 +77,18 @@ test('a blog with no url cannot be added', async () => {
 
     await api
         .post('/api/blogs')
+        .set('Authorization', `bearer ${user.token}`)
         .send(newBlog)
         .expect(400)
 
     const res = await api.get('/api/blogs')
-    
+
     expect(res.body).toHaveLength(initialBlogs.length)
 })
 
 test('a blog can be added without likes field', async () => {
+    const user = testHelper.userTokens[0]
+
     // Creates a blog with no likes
     const newBlog = {
         title: "Unlikely to be liked post",
@@ -83,12 +98,13 @@ test('a blog can be added without likes field', async () => {
 
     await api
         .post('/api/blogs')
+        .set('Authorization', `bearer ${user.token}`)
         .send(newBlog)
         .expect(201)
 
     const res = await api.get('/api/blogs')
     const blogLikes = res.body.map(blog => blog.likes)
-    
+
     expect(res.body).toHaveLength(initialBlogs.length + 1)
     expect(blogLikes).toContain(0)
 })
@@ -102,23 +118,23 @@ test('a blog unique identifier is named id', async () => {
 })
 
 test('can delete a blog based on id', async () => {
+    const user = testHelper.userTokens[0]
     const all = await api.get('/api/blogs')
     const firstBlogId = all.body[0].id
 
     await api
         .delete(`/api/blogs/${firstBlogId}`)
+        .set('Authorization', `bearer ${user.token}`)
         .expect(204)
 
     const res = await api.get('/api/blogs')
 
-    expect(res.body).toHaveLength(initialBlogs.length-1)
+    expect(res.body).toHaveLength(initialBlogs.length - 1)
 })
 
 test('can update a blog based on id', async () => {
     const all = await api.get('/api/blogs')
     const firstBlogId = all.body[0].id
-
-    console.log(firstBlogId)
 
     const blogToUpdate = {
         title: "Updated blog title",
@@ -154,13 +170,52 @@ const initialBlogs = [
     }
 ]
 
-beforeEach(async () => {
-    await Blog.deleteMany({})
+const initialUser = {
+    "username": "Terry Pratchett22",
+    "name": "Sir Terry",
+    "password": "rincewind123"
+}
 
-    for(let blog of initialBlogs) {
-        let blogObj = new Blog(blog)
-        await blogObj.save()
+
+beforeEach(async () => {
+    await User.deleteMany({})
+    testHelper.userTokens = []
+    for (let user of testHelper.initialUsers){
+      const userObject = new User(user)
+      await userObject.save()
+      const userForToken = { username: userObject.username, id: userObject._id}
+      const token = jwt.sign(userForToken, process.env.SECRET)
+      testHelper.userTokens.push({username: userObject.username, id: userObject._id, token: token})
     }
+    await Blog.deleteMany({})
+    for (let blog of testHelper.initialBlogs){
+      const user = await User.findOne({})
+      const blogObject = new Blog({...blog, user: user._id})
+      await blogObject.save()
+    }
+    // await Blog.deleteMany({})
+
+    // const user = await api
+    //     .post('/api/users')
+    //     .send(initialUser)
+
+    // const userId = user.body.id.toString()
+
+    // const login = {
+    //     "username": "Terry Pratchett22",
+    //     "password": "rincewind123"
+    // }
+
+    // const loggedUser = await api
+    //     .post('/api/login')
+    //     .send(login)
+
+    // userToken = loggedUser.body.token
+
+    // for (let blog of initialBlogs) {
+    //     let blogObj = new Blog({user: userId, ...blog})
+    //     await blogObj.save()
+    // }
 })
 
 afterAll(() => {
