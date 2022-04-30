@@ -17,6 +17,14 @@ const App = () => {
     )
   }, [])
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')
+    if(loggedUserJSON){
+      const loggedUser = JSON.parse(loggedUserJSON)
+      setUser(loggedUser)
+    }
+  }, [])
+
   const handleLogin = async (e) => {
     e.preventDefault()
 
@@ -24,6 +32,9 @@ const App = () => {
       const loggedUser = await loginService.login({
         username, password
       })
+      window.localStorage.setItem(
+        'loggedBloglistUser', JSON.stringify(loggedUser)
+      )
       setUser(loggedUser)
       setUsername('')
       setPassword('')
@@ -33,20 +44,33 @@ const App = () => {
     }
   }
 
+  const handleLogout = () => {
+    setUser(null)
+    window.localStorage.removeItem('loggedBloglistUser')
+  }
+
   const loginForm = () => (
     <>
       <h2>Login Form</h2>
       <form onSubmit={handleLogin}>
-        <input
-          type="text"
-          value={username}
-          onChange={({ target }) => setUsername(target.value)} >
-        </input>
-        <input
-          type="password"
-          value={password}
-          onChange={({ target }) => setPassword(target.value)}>
-        </input>
+        <div>
+          <label htmlFor="username">Username</label>
+          <input
+            type="text"
+            id="username"
+            value={username}
+            onChange={({ target }) => setUsername(target.value)} >
+          </input>
+        </div>
+        <div>
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={({ target }) => setPassword(target.value)}>
+          </input>
+        </div>
         <button type="submit"> Login</button>
       </form>
     </>
@@ -54,7 +78,7 @@ const App = () => {
 
   const displayBlogs = () => (
     <>
-      <h2>blogs</h2>
+      <h2>List of Blogs</h2>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
@@ -63,14 +87,13 @@ const App = () => {
 
   return (
     <div>
-
       <Notification message={errorMessage} />
-
-      {user===null
+      {user === null
         ? loginForm()
         : <>
-            <p>{user.name} is logged in</p>
-            {displayBlogs()}
+          <div>{user.name} is logged in</div>
+          <button onClick={handleLogout}>Logout</button>
+          {displayBlogs()}
           </>
       }
 
