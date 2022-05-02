@@ -18,7 +18,7 @@ test('blogs are returned as json', () => {
 test('test db loads all initial passed objects', async () => {
     const response = await api.get('/api/blogs')
 
-    expect(response.body).toHaveLength(initialBlogs.length)
+    expect(response.body).toHaveLength(testHelper.initialBlogs.length)
 })
 
 test('a valid blog can be added', async () => {
@@ -42,7 +42,7 @@ test('a valid blog can be added', async () => {
     const res = await api.get('/api/blogs')
     const blogTitles = res.body.map(b => b.title)
 
-    expect(res.body).toHaveLength(initialBlogs.length + 1)
+    expect(res.body).toHaveLength(testHelper.initialBlogs.length + 1)
     expect(blogTitles).toContain('Vue.js is great')
 })
 
@@ -63,7 +63,7 @@ test('a blog with no title cannot be added', async () => {
 
     const res = await api.get('/api/blogs')
 
-    expect(res.body).toHaveLength(initialBlogs.length)
+    expect(res.body).toHaveLength(testHelper.initialBlogs.length)
 })
 
 test('a blog with no url cannot be added', async () => {
@@ -83,7 +83,7 @@ test('a blog with no url cannot be added', async () => {
 
     const res = await api.get('/api/blogs')
 
-    expect(res.body).toHaveLength(initialBlogs.length)
+    expect(res.body).toHaveLength(testHelper.initialBlogs.length)
 })
 
 test('a blog can be added without likes field', async () => {
@@ -105,7 +105,7 @@ test('a blog can be added without likes field', async () => {
     const res = await api.get('/api/blogs')
     const blogLikes = res.body.map(blog => blog.likes)
 
-    expect(res.body).toHaveLength(initialBlogs.length + 1)
+    expect(res.body).toHaveLength(testHelper.initialBlogs.length + 1)
     expect(blogLikes).toContain(0)
 })
 
@@ -129,7 +129,7 @@ test('can delete a blog based on id', async () => {
 
     const res = await api.get('/api/blogs')
 
-    expect(res.body).toHaveLength(initialBlogs.length - 1)
+    expect(res.body).toHaveLength(testHelper.initialBlogs.length - 1)
 })
 
 test('can update a blog based on id', async () => {
@@ -154,29 +154,6 @@ test('can update a blog based on id', async () => {
     expect(blogTitles).toContain('Updated blog title')
 })
 
-
-const initialBlogs = [
-    {
-        title: "Creating a react app",
-        author: "React tutorials",
-        url: "https://www.reacttutorials.com",
-        likes: 10
-    },
-    {
-        title: "Using Jest",
-        author: "Jest tester",
-        url: "https://www.jestintime.com/usingjest",
-        likes: 5
-    }
-]
-
-const initialUser = {
-    "username": "Terry Pratchett22",
-    "name": "Sir Terry",
-    "password": "rincewind123"
-}
-
-
 beforeEach(async () => {
     await User.deleteMany({})
     testHelper.userTokens = []
@@ -193,29 +170,6 @@ beforeEach(async () => {
       const blogObject = new Blog({...blog, user: user._id})
       await blogObject.save()
     }
-    // await Blog.deleteMany({})
-
-    // const user = await api
-    //     .post('/api/users')
-    //     .send(initialUser)
-
-    // const userId = user.body.id.toString()
-
-    // const login = {
-    //     "username": "Terry Pratchett22",
-    //     "password": "rincewind123"
-    // }
-
-    // const loggedUser = await api
-    //     .post('/api/login')
-    //     .send(login)
-
-    // userToken = loggedUser.body.token
-
-    // for (let blog of initialBlogs) {
-    //     let blogObj = new Blog({user: userId, ...blog})
-    //     await blogObj.save()
-    // }
 })
 
 afterAll(() => {
