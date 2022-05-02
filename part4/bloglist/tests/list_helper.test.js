@@ -120,3 +120,17 @@ describe('favorite blog', () => {
         expect(favorite).toBeNull()
     })
 })
+
+describe('author with most blogs', () => {
+    test('can pick the author with the highest number of blogs', () => {
+        const mostBlogsAuthor = listHelper.mostBlogs(blogs)
+        expect(mostBlogsAuthor).toEqual({author: 'Robert C. Martin', blogs: 3})
+    })
+})
+
+describe('highest number of likes', () => {
+    test('can determine the author with the most likes', () => {
+        const mostLikedAuthor = listHelper.mostLikes(blogs)
+        expect(mostLikedAuthor).toEqual({author: 'Edsger W. Dijkstra', likes: 40})
+    })
+})

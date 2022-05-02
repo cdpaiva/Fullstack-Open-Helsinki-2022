@@ -18,4 +18,54 @@ const favoriteBlog = (blog) => {
     return pick(favoriteComplete, ['title', 'author','likes'])
 }
 
-module.exports = { dummy, totalLikes, favoriteBlog }
+const mostBlogs = (blogs) => {
+    const histogram = {}
+
+    blogs.map(blog => {
+        if(histogram[blog.author]){
+            histogram[blog.author]++
+        } else {
+            histogram[blog.author] = 1
+        }
+    })
+
+    let maxCount = 0
+    let topAuthor = ''
+    for (let author in histogram) {
+        if(histogram[author] > maxCount) {
+            maxCount = histogram[author]
+            topAuthor = author
+        }
+    }
+    return {
+        author: topAuthor,
+        blogs: maxCount
+    }
+}
+
+const mostLikes = (blogs) => {
+    const histogram = {}
+
+    blogs.map(blog => {
+        if(histogram[blog.author]){
+            histogram[blog.author] += blog.likes
+        } else {
+            histogram[blog.author] = blog.likes
+        }
+    })
+
+    let maxCount = 0
+    let topAuthor = ''
+    for (let author in histogram) {
+        if(histogram[author] > maxCount) {
+            maxCount = histogram[author]
+            topAuthor = author
+        }
+    }
+    return {
+        author: topAuthor,
+        likes: maxCount
+    }
+}
+
+module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs, mostLikes }
