@@ -1,0 +1,11 @@
+.notification-success {
+    background-color: aquamarine;
+    border: 1px solid green;
+    color: green
+}
+
+.notification-error {
+    background-color: rgb(245, 122, 122);
+    border: 1px solid red;
+    color: red
+}

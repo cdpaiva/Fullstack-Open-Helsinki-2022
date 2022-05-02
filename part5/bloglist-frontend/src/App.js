@@ -13,6 +13,7 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const [newPostMessage, setNewPostMessage] = useState('')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -60,8 +61,8 @@ const App = () => {
       title, author, url
     })
 
-    console.log(response)
-
+    setNewPostMessage(`New blog ${response.title} by ${response.author}`)
+    setTimeout(()=>setNewPostMessage(''), 5000)
   }
 
   const loginForm = () => (
@@ -136,7 +137,8 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={errorMessage} />
+      <Notification message={errorMessage} status="error"/>
+      <Notification message={newPostMessage} status="success"/>
       {user === null
         ? loginForm()
         : <>
