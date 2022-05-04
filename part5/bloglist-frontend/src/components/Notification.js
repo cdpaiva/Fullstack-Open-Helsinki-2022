@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+
 const Notification = ({ message, status }) => {
     if (message && status === 'error') {
         return <div className='notification-error'>
@@ -9,6 +11,11 @@ const Notification = ({ message, status }) => {
             {message}
         </div>
     }
+}
+
+Notification.propTypes = {
+    message: PropTypes.string.isRequired,
+    status: PropTypes.string.isRequired
 }
 
 export default Notification
