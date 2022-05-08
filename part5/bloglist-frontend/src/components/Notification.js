@@ -1,4 +1,4 @@
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types'
 
 const Notification = ({ message, status }) => {
     if (message && status === 'error') {

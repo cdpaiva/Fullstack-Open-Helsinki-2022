@@ -56,18 +56,23 @@ const App = () => {
         const response = await blogService.save(blog)
         setNewPostMessage(`New blog ${response.title} by ${response.author}`)
         setTimeout(() => setNewPostMessage(''), 5000)
+        setBlogs([response, ...blogs])
     }
 
     const addLike = async blog => {
         const response = await blogService.update(blog)
         setNewPostMessage(`You liked ${response.title}`)
         setTimeout(() => setNewPostMessage(''), 5000)
+        setBlogs(blogs.map( b =>
+            b.id===response.id ? response : b
+        ))
     }
 
     const removeBlog = id => {
         blogService.remove(id)
         setErrorMessage('Blog removed')
         setTimeout(() => setErrorMessage(''), 5000)
+        setBlogs(blogs.filter(b => b.id !== id))
     }
 
     const displayBlogs = () => (
