@@ -63,9 +63,10 @@ const App = () => {
         const response = await blogService.update(blog)
         setNewPostMessage(`You liked ${response.title}`)
         setTimeout(() => setNewPostMessage(''), 5000)
-        setBlogs(blogs.map( b =>
-            b.id===response.id ? response : b
-        ))
+        setBlogs(sortedBlogs(
+            blogs.map( b =>
+                b.id===response.id ? response : b
+            )))
     }
 
     const removeBlog = id => {

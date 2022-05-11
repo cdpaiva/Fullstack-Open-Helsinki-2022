@@ -30,18 +30,18 @@ const Blog = ({ blog, addLike, removeBlog }) => {
             </p>
             <p>
                 {blog.likes}
-                <button onClick={handleLike}>Like</button>
+                <button onClick={handleLike} id="like-button">Like</button>
             </p>
             <p>
                 {blog.user.name}
             </p>
-            <button onClick={handleDelete}>Remove</button>
+            <button onClick={handleDelete} id="blog-delete-button">Remove</button>
         </div>
     )
 
     return <div className="blog-card">
         {blog.title} {blog.author}
-        <button onClick={() => setVisible(!visible)}>
+        <button onClick={() => setVisible(!visible)} id="blog-details-button">
             {visible ? 'Hide' : 'Show'}
         </button>
         {visible && showDetails()}
