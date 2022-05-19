@@ -1,10 +1,11 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 const CreateNew = (props) => {
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
-  const [notification, setNotification] = useState('')
+  const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -14,13 +15,13 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
-    setNotification("New note has been created")
-    setTimeout(() => setNotification(""),3000)
+    props.setNotification(`New note ${content} has been created`)
+    setTimeout(() => props.setNotification(""),3000)
+    navigate('/')
   }
 
   return (
     <div>
-      {notification && <p>{notification}</p>}
       <h2>Create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
         <div>

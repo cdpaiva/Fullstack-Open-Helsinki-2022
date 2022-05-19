@@ -8,7 +8,7 @@ import CreateNew from './components/CreateNew'
 import Anecdote from './components/Anecdote'
 
 const App = () => {
-
+  const [notification, setNotification] = useState('')
   const [anecdotes, setAnecdotes] = useState([
     {
       content: 'If it hurts, do it more often',
@@ -54,9 +54,10 @@ const App = () => {
     <>
       <Menu />
       <h1>Software anecdotes</h1>
+      {notification && <p>{notification}</p>}
       <Routes>
         <Route path='/' element={<AnecdoteList anecdotes={anecdotes} />}></Route>
-        <Route path='/new-anectode' element={<CreateNew addNew={addNew} />}></Route>
+        <Route path='/new-anectode' element={<CreateNew addNew={addNew} setNotification={setNotification} />}></Route>
         <Route path='/about' element={<About />}></Route>
         <Route path='anecdotes/:id' element={<Anecdote anecdote={anecdote} />}></Route>
       </Routes>
