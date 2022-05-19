@@ -1,13 +1,11 @@
 import { useState } from 'react'
-import {
-  BrowserRouter as Router,
-  Routes, Route
-} from "react-router-dom"
+import { Routes, Route, useMatch } from "react-router-dom"
 import Menu from './components/Menu'
 import AnecdoteList from './components/AnecdoteList'
 import About from './components/About'
 import Footer from './components/Footer'
 import CreateNew from './components/CreateNew'
+import Anecdote from './components/Anecdote'
 
 const App = () => {
 
@@ -28,7 +26,11 @@ const App = () => {
     }
   ])
 
-  const anecdote = anecdotes[0]
+  const match = useMatch('/anecdotes/:id')
+  const anecdote = match
+    ? anecdotes.find(a => a.id === Number(match.params.id))
+    : null
+
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
     setAnecdotes(anecdotes.concat(anecdote))
@@ -49,17 +51,17 @@ const App = () => {
   // }
 
   return (
-    <Router>
+    <>
       <Menu />
       <h1>Software anecdotes</h1>
       <Routes>
         <Route path='/' element={<AnecdoteList anecdotes={anecdotes} />}></Route>
         <Route path='/new-anectode' element={<CreateNew addNew={addNew} />}></Route>
         <Route path='/about' element={<About />}></Route>
-        <Route path='anecdotes/:id' element={anecdote}></Route>
+        <Route path='anecdotes/:id' element={<Anecdote anecdote={anecdote} />}></Route>
       </Routes>
       <Footer />
-    </Router>
+    </>
   )
 }
 
